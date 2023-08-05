@@ -1,52 +1,58 @@
 package stepdefinitions;
 
-import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import utilities.FrameworkUtilities;
 import utilities.RestAssuredUtilities;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
+import pojo.CreatePostResponse;
 import org.junit.Assert;
-
+import com.fasterxml.jackson.databind.JsonNode;
 import constants.ApiResources;
-import constants.Environment;
 import constants.ErrorCodes;
+import constants.PayLoadPath;
+import hooks.Hooks;
 
 import java.io.IOException;
-import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class PostStepDefinitions  extends RestAssuredUtilities{
 	
+    private static final Logger logger = LogManager.getLogger(PostStepDefinitions.class);
+
 	private Response response;
-    @Given("the JSONPlaceholder API is up and running")
+	private JsonNode  createPostPayload ;
+    @Given("user has valid payload to create POST")
     public void the_json_placeholder_api_is_up_and_running() throws IOException {
-    	int statusCode = RestAssured.given().spec(requestSpecification()).when().get("/").getStatusCode();
-        Assert.assertEquals(ErrorCodes.SERVER_DOWN.getMessage(),200, statusCode);
-        
+    	createPostPayload = FrameworkUtilities.setPayload(PayLoadPath.CREATE_POST_PAYLOAD.getFilePath());
     }
 
-    @When("I make a POST request to the endpoint {string} with the following data:")
-    public void i_make_a_post_request_to_the_endpoint_with_the_following_data(String string, DataTable dataTable) throws IOException {
-        Map<String, String> postPayload = dataTable.asMap(String.class, String.class);
-        response =  RestAssured.given().spec(requestSpecification()).when().body(postPayload).post(ApiResources.post.getResource());
-
+    @When("user make a POST request")
+    public void user_make_a_post_request() throws IOException {
+        response =  RestAssured.given().spec(Hooks.getRequestSpecification()).
+        		when().body(createPostPayload).post(ApiResources.post.getResource());
+        logger.info("Request is sent to create new POST", createPostPayload);
     }
 
     @Then("the API should respond with {int} status code")
     public void the_api_should_respond_with_status_code_created(int expectedStatusCode) {
         int actualStatusCode = response.getStatusCode();
         Assert.assertEquals(ErrorCodes.CREATE_POST_FAILED.getMessage(),expectedStatusCode, actualStatusCode);
+        logger.info("New post is created");
     }
 
-    @Then("the response should contain the following data:")
-    public void the_response_should_contain_the_following_data(DataTable dataTable) {
-        Map<String, String> expectedData = dataTable.asMap(String.class, String.class);
-        Map<String, String> responseData = response.jsonPath().getMap("");
-        Assert.assertEquals(ErrorCodes.INCORRECT_USERID.getMessage(),expectedData.get("userId"), responseData.get("userId"));
-        Assert.assertEquals(ErrorCodes.INCORRECT_TITLE.getMessage(),expectedData.get("title"), responseData.get("title"));
-        Assert.assertEquals(ErrorCodes.INCORRECT_BODY.getMessage(),expectedData.get("body"), responseData.get("body"));
+    @Then("the response should contain posted data")
+    public void the_response_should_contain_the_posted_data() {        
+        CreatePostResponse res =  response.as(CreatePostResponse.class);
+        Assert.assertEquals(ErrorCodes.INCORRECT_USERID.getMessage(),createPostPayload.get("userId").asInt(), res.getUserId().intValue());
+        Assert.assertEquals(ErrorCodes.INCORRECT_TITLE.getMessage(),createPostPayload.get("title").asText(), res.getTitle());
+        Assert.assertEquals(ErrorCodes.INCORRECT_BODY.getMessage(),createPostPayload.get("body").asText(), res.getBody());
+        logger.info("Create post response pay load is validated");
+
+
     }
 
 

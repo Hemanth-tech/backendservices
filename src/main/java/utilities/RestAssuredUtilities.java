@@ -13,35 +13,24 @@ import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 
-public class RestAssuredUtilities extends JSONUtilities {
-	
-	public static RequestSpecification reqSpec;
-	Environment env =Environment.valueOf("QA");
+public class RestAssuredUtilities extends FrameworkUtilities {
 
-	
-	public RequestSpecification requestSpecification() throws IOException
-	{
-		
-		if(reqSpec==null)
-		{
-		PrintStream log =new PrintStream(new FileOutputStream("logging.txt"));
-		reqSpec=new RequestSpecBuilder().setBaseUri(env.getValue()).addHeaders(getHeaderMap())
-				 .addFilter(RequestLoggingFilter.logRequestTo(log))
-				 .addFilter(ResponseLoggingFilter.logResponseTo(log))
-		.setContentType(ContentType.JSON).build();
-		 return reqSpec;
-		}
+	public static RequestSpecification reqSpec;
+
+	public static RequestSpecification buildReqSpec(String testEnv) throws IOException {
+
+		PrintStream log = new PrintStream(new FileOutputStream("logging.txt"));
+		reqSpec = new RequestSpecBuilder().setBaseUri(Environment.valueOf(testEnv).getValue())
+				.addHeaders(getHeaderMap()).addFilter(RequestLoggingFilter.logRequestTo(log))
+				.addFilter(ResponseLoggingFilter.logResponseTo(log)).setContentType(ContentType.JSON).build();
 		return reqSpec;
-		
-		
+
 	}
-	
-	
+
 	public static Map<String, String> getHeaderMap() {
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Content-Type", "application/json");
-        return headers;
-    }
-	
+		Map<String, String> headers = new HashMap<>();
+		headers.put("Content-Type", "application/json");
+		return headers;
+	}
 
 }
