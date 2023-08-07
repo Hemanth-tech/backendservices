@@ -6,7 +6,8 @@ public enum ErrorCodes {
     CREATE_POST_FAILED("POST_01", "New post is not created"),
     INCORRECT_USERID("POST_02", "User id is incorrect in newly created post"),
     INCORRECT_TITLE("POST_03", "Title is incorrect in newly created post"),
-    INCORRECT_BODY("POST_04", "Body  is incorrect in newly created post");
+    INCORRECT_BODY("POST_04", "Body  is incorrect in newly created post"),
+    CREATE_POST_FOR_INVALID_USERID_FAILED("POST_05", "Create post failed for invalid user id");
 
     private final String code;
     private final String message;
