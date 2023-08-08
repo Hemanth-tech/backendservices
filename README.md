@@ -50,7 +50,7 @@ Feel free to modify, extend, or customize the services to meet your application'
 
 ## API Documentation
 
-Detailed API documentation for each service is available in the [API Documentation](/api-docs) directory. This documentation provides information about available endpoints, request and response formats, authentication requirements, and example usage.
+Detailed API documentation for each service is available in the [API Documentation](/https://jsonplaceholder.typicode.com/) directory. This documentation provides information about available endpoints, request and response formats, authentication requirements, and example usage.
 
 ## Contributing
 
