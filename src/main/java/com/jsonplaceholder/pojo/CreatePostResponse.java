@@ -1,4 +1,4 @@
-package pojo;
+package com.jsonplaceholder.pojo;
 
 public class CreatePostResponse {
 	private Integer userId;

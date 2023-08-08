@@ -1,11 +1,11 @@
-package constants;
+package com.jsonplaceholder.constants;
 
 public enum ApiResources {
 	
 	
-	post("/posts"),
-	comment("/comments"),
-	users("/users");
+	POST("/posts"),
+	COMMENT("/posts/{postID}/comments"),
+	USERS("/users");
 	private String resource;
 	
 	ApiResources(String resource)

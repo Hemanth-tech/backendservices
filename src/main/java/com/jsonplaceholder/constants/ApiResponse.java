@@ -1,4 +1,4 @@
-package constants;
+package com.jsonplaceholder.constants;
 
 public enum ApiResponse {
     // Successful responses
