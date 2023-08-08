@@ -25,9 +25,9 @@ To get started with these backend services, follow these steps:
 
 This repository provides the following backend services:
 
-1. **Service 1**: A description of what this service does and how it can be used.
-2. **Service 2**: Another description of a different service along with its use cases.
-3. **Service 3**: More details about yet another service and its functionalities.
+1. **User**: User resource can be modified like create, read, update 
+2. **Posts**: Post resource can be modified.
+3. **Comments**: Comment resource can be modified.
 
 Each service is designed to handle specific tasks and can be used individually or in combination to meet the requirements of your applications.
 
